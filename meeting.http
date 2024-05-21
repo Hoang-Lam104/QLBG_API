@@ -1,0 +1,47 @@
+POST  http://localhost:5073/api/meetings
+Content-Type: application/json
+
+{
+    "title": "Họp giao ban",
+    "date": "2024-06-11"
+}
+
+###
+GET http://localhost:5073/api/meetings
+
+###
+DELETE http://localhost:5073/api/meetings/6
+
+###
+GET http://localhost:5073/api/user/2/meetings
+
+###
+GET http://localhost:5073/api/meetings/2/attendees
+
+###
+GET http://localhost:5073/api/departments
+
+###
+GET http://localhost:5073/api/rooms
+
+###
+PUT  http://localhost:5073/api/user/attend
+Content-Type: application/json
+
+{
+    "userId": 3,
+    "meetingId": 3,
+    "roomId": 1,
+    "isMeeting": false,
+    "reason": "Khám bệnh ở phòng khám"
+}
+
+###
+PUT  http://localhost:5073/api/user/2/info
+Content-Type: application/json
+
+{
+    "fullname": "Nguyễn Trung A",
+    "departmentId": 2,
+    "position": "Trưởng khoa"
+}
