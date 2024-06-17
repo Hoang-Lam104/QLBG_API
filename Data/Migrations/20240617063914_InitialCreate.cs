@@ -59,6 +59,8 @@ namespace QLGB.API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
                     Fullname = table.Column<string>(type: "TEXT", nullable: false),
                     Position = table.Column<string>(type: "TEXT", nullable: false),
                     DepartmentId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -127,19 +129,20 @@ namespace QLGB.API.Data.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Hội trường 1" },
-                    { 2, "Hội trường 2" },
-                    { 3, "Hội trường CS2" }
+                    { 1, "Hội trường 1 CS1" },
+                    { 2, "Hội trường 2 CS1" },
+                    { 3, "Hội trường 3 CS1" },
+                    { 4, "Hội trường CS2" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "DepartmentId", "Fullname", "Position" },
+                columns: new[] { "Id", "DepartmentId", "Fullname", "Password", "Position", "Username" },
                 values: new object[,]
                 {
-                    { 1, 6, "Admin", "Admin" },
-                    { 2, 1, "Nguyễn Văn A", "Trưởng khoa" },
-                    { 3, 2, "Lê Thị B", "Điều dưỡng trưởng" }
+                    { 1, 6, "Admin", "123", "Admin", "admin" },
+                    { 2, 1, "Nguyễn Văn A", "123", "Trưởng khoa", "ANV" },
+                    { 3, 2, "Lê Thị B", "123", "Điều dưỡng trưởng", "BLT" }
                 });
 
             migrationBuilder.CreateIndex(

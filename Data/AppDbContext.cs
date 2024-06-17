@@ -29,9 +29,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasForeignKey(a => a.RoomId);
 
         modelBuilder.Entity<Room>().HasData(
-            new { Id = 1, Name = "Hội trường 1" },
-            new { Id = 2, Name = "Hội trường 2" },
-            new { Id = 3, Name = "Hội trường CS2" }
+            new { Id = 1, Name = "Hội trường 1 CS1" },
+            new { Id = 2, Name = "Hội trường 2 CS1" },
+            new { Id = 3, Name = "Hội trường 3 CS1" },
+            new { Id = 4, Name = "Hội trường CS2" }
         );
 
         modelBuilder.Entity<Department>().HasData(
@@ -56,7 +57,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             new
             {
                 Id = 2,
-                Username = "a",
+                Username = "ANV",
                 Password = "123",
                 Fullname = "Nguyễn Văn A",
                 DepartmentId = 1,
@@ -65,7 +66,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             new
             {
                 Id = 3,
-                Username = "b",
+                Username = "BLT",
                 Password = "123",
                 Fullname = "Lê Thị B",
                 DepartmentId = 2,

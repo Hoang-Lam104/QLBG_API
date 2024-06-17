@@ -11,7 +11,7 @@ using QLGB.API.Data;
 namespace QLGB.API.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240520053246_InitialCreate")]
+    [Migration("20240617063914_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -135,16 +135,21 @@ namespace QLGB.API.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Hội trường 1"
+                            Name = "Hội trường 1 CS1"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Hội trường 2"
+                            Name = "Hội trường 2 CS1"
                         },
                         new
                         {
                             Id = 3,
+                            Name = "Hội trường 3 CS1"
+                        },
+                        new
+                        {
+                            Id = 4,
                             Name = "Hội trường CS2"
                         });
                 });
@@ -162,7 +167,15 @@ namespace QLGB.API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -178,21 +191,27 @@ namespace QLGB.API.Data.Migrations
                             Id = 1,
                             DepartmentId = 6,
                             Fullname = "Admin",
-                            Position = "Admin"
+                            Password = "123",
+                            Position = "Admin",
+                            Username = "admin"
                         },
                         new
                         {
                             Id = 2,
                             DepartmentId = 1,
                             Fullname = "Nguyễn Văn A",
-                            Position = "Trưởng khoa"
+                            Password = "123",
+                            Position = "Trưởng khoa",
+                            Username = "ANV"
                         },
                         new
                         {
                             Id = 3,
                             DepartmentId = 2,
                             Fullname = "Lê Thị B",
-                            Position = "Điều dưỡng trưởng"
+                            Password = "123",
+                            Position = "Điều dưỡng trưởng",
+                            Username = "BLT"
                         });
                 });
 

@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlite<AppDbContext>("Data Source=DataStore.db");
 builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
 {
-    // build.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
     build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
@@ -16,6 +15,7 @@ app.MapUserEndpoint();
 app.MapMeetingEndpoint();
 app.MapRoomEndpoint();
 app.MapDepartmentEndpoint();
+app.MapLoginEndpoint();
 app.MigrateDb();
 
 app.Run();

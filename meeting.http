@@ -3,14 +3,14 @@ Content-Type: application/json
 
 {
     "title": "Họp giao ban",
-    "date": "2024-06-11"
+    "date": "2024-05-24"
 }
 
 ###
 GET http://localhost:5073/api/meetings
 
 ###
-DELETE http://localhost:5073/api/meetings/6
+DELETE http://localhost:5073/api/meetings/9
 
 ###
 GET http://localhost:5073/api/user/2/meetings
@@ -44,4 +44,13 @@ Content-Type: application/json
     "fullname": "Nguyễn Trung A",
     "departmentId": 2,
     "position": "Trưởng khoa"
+}
+
+###
+POST  http://localhost:5073/api/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "123"
 }

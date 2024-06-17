@@ -52,7 +52,7 @@ public static class MeetingEndpoints
             }
 
             await dbContext.SaveChangesAsync();
-            return Results.Ok(dbContext.Meetings);
+            return Results.NoContent();
         });
 
         group.MapDelete("/{id}", async (int id, AppDbContext dbContext) =>
@@ -77,7 +77,7 @@ public static class MeetingEndpoints
 
             await dbContext.SaveChangesAsync();
 
-            return Results.Ok(dbContext.Meetings);
+            return Results.NoContent();
         });
 
         group.MapGet("/{id}/attendees", async (int id, AppDbContext dbContext) =>
