@@ -8,7 +8,7 @@ public static class RoomEndpoints
     {
         var group = app.MapGroup("api/rooms");
 
-        group.MapGet("/", (AppDbContext dbContext) => dbContext.Rooms);
+        group.MapGet("/", (AppDbContext dbContext) => dbContext.Rooms).RequireAuthorization();
 
         return group;
     }

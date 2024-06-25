@@ -5,6 +5,7 @@ using QLGB.API.Models;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
+    public DbSet<Log> Log { get; set; }
     public DbSet<Meeting> Meetings { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<User> Users { get; set; }
@@ -13,6 +14,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Log>()
+            .HasOne(l => l.User)
+            .WithMany(u => u.Logs)
+            .HasForeignKey(l => l.UserId);
+
         modelBuilder.Entity<Attendee>()
             .HasOne(a => a.User)
             .WithMany(u => u.Attendees)

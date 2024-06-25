@@ -8,7 +8,7 @@ public static class DepartmentEndpoints
     {
         var group = app.MapGroup("api/departments");
 
-        group.MapGet("/", (AppDbContext dbContext) => dbContext.Departments);
+        group.MapGet("/", (AppDbContext dbContext) => dbContext.Departments).RequireAuthorization();
 
         return group;
     }

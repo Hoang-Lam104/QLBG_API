@@ -4,6 +4,6 @@ public record class UpdateAttendeeDto(
     int UserId,
     int MeetingId,
     int RoomId,
-    bool IsMeeting,
+    string Status,
     string Reason
 );

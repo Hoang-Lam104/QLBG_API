@@ -16,10 +16,19 @@ public static class UserEndpoints
             User? user = dbContext.Users.Find(id);
 
             return user is null ? Results.NotFound() : Results.Ok(user);
-        });
+        }).RequireAuthorization();
 
-        group.MapGet("/{id}/meetings", async (int id, AppDbContext dbContext) =>
+        group.MapGet("/{id}/meetings", async (
+            int id,
+            int pageIndex,
+            int numberInPage,
+            AppDbContext dbContext,
+            DateTime? startTime = null,
+            DateTime? endTime = null) =>
         {
+            startTime ??= DateTime.MinValue;
+            endTime ??= DateTime.MaxValue;
+
             User? user = dbContext.Users.Find(id);
 
             if (user is null) return Results.NotFound();
@@ -32,20 +41,33 @@ public static class UserEndpoints
             foreach (var item in list)
             {
                 var meetingEntity = dbContext.Meetings.Find(item.MeetingId);
+
                 var meetingDto = new AttenMeetingDto
                 (
                     Id: meetingEntity!.Id,
                     Title: meetingEntity.Title,
                     RoomId: item.RoomId,
                     Reason: item.Reason!,
-                    IsMeeting: item.IsMeeting,
+                    Status: item.Status!,
                     Date: meetingEntity.Date
                 );
 
-                meetings.Add(meetingDto);
+                if (meetingDto.Date >= startTime && meetingDto.Date <= endTime)
+                {
+                    meetings.Add(meetingDto);
+                }
             }
 
-            return Results.Ok(meetings);
+            AttenMeetingPagi attenMeetingPagi = new()
+            {
+                Meetings = meetings.OrderByDescending(m => m.Id)
+                    .Skip((pageIndex - 1) * numberInPage)
+                    .Take(numberInPage)
+                    .ToList(),
+                Total = meetings.Count()
+            };
+
+            return Results.Ok(attenMeetingPagi);
         });
 
         group.MapPut("/attend", async (UpdateAttendeeDto updateAttendee, AppDbContext dbContext) =>
@@ -57,35 +79,14 @@ public static class UserEndpoints
             if (attendee is null) return Results.NotFound();
 
             attendee.RoomId = updateAttendee.RoomId;
-            attendee.IsMeeting = updateAttendee.IsMeeting;
+            attendee.Status = updateAttendee.Status;
             attendee.Reason = updateAttendee.Reason.Length > 0 ? updateAttendee.Reason : null;
 
             dbContext.Entry(attendee).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
 
-            var attendees = await dbContext.Attendees.ToListAsync();
-            var list = attendees.Where(attendee => attendee.UserId == updateAttendee.UserId);
-
-            var meetings = new List<AttenMeetingDto>();
-
-            foreach (var item in list)
-            {
-                var meetingEntity = dbContext.Meetings.Find(item.MeetingId);
-                var meetingDto = new AttenMeetingDto
-                (
-                    Id: meetingEntity!.Id,
-                    Title: meetingEntity.Title,
-                    RoomId: item.RoomId,
-                    Reason: item.Reason!,
-                    IsMeeting: item.IsMeeting,
-                    Date: meetingEntity.Date
-                );
-
-                meetings.Add(meetingDto);
-            }
-
-            return Results.Ok(meetings);
-        });
+            return Results.NoContent();
+        }).RequireAuthorization();
 
         group.MapPut("/{id}/info", async (int id, UpdateUserDto updateUser, AppDbContext dbContext) =>
         {
@@ -101,7 +102,7 @@ public static class UserEndpoints
             await dbContext.SaveChangesAsync();
 
             return Results.Ok(user);
-        });
+        }).RequireAuthorization();
 
         return group;
     }

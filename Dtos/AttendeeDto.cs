@@ -6,5 +6,6 @@ public record class AttendeeDto(
     int DepartmentId,
     string Position,
     int RoomId,
-    bool IsMeeting
+    string Status,
+    string? Reason
 );

@@ -1,26 +1,27 @@
+###
 POST  http://localhost:5073/api/meetings
 Content-Type: application/json
 
 {
     "title": "Họp giao ban",
-    "date": "2024-05-24"
+    "date": "2024-08-29"
 }
 
 ###
-GET http://localhost:5073/api/meetings
+GET http://localhost:5073/api/meetings?pageIndex=1&numberInPage=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFkbWluIiwibmJmIjoxNzE5MjA5MTI5LCJleHAiOjE3MTkyMzA3MjksImlhdCI6MTcxOTIwOTEyOSwiaXNzIjoicXVhbmx5Z2lhb2Jhbi5jb20iLCJhdWQiOiJxdWFubHlnaWFvYmFuLmNvbSJ9.07XhrdZ2gV12klKaDEc3ARSohexl3yj3gYSzmn_-icQ
 
 ###
 DELETE http://localhost:5073/api/meetings/9
 
 ###
-GET http://localhost:5073/api/user/2/meetings
+GET http://localhost:5073/api/user/2/meetings?pageIndex=1&numberInPage=10&startTime=2024-08-21
 
 ###
-GET http://localhost:5073/api/meetings/2/attendees
-
+GET http://localhost:5073/api/meetings/14/attendees?pageIndex=1&numberInPage=10
 ###
 GET http://localhost:5073/api/departments
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFkbWluIiwibmJmIjoxNzE5MjA5MTI5LCJleHAiOjE3MTkyMzA3MjksImlhdCI6MTcxOTIwOTEyOSwiaXNzIjoicXVhbmx5Z2lhb2Jhbi5jb20iLCJhdWQiOiJxdWFubHlnaWFvYmFuLmNvbSJ9.07XhrdZ2gV12klKaDEc3ARSohexl3yj3gYSzmn_-icQ
 ###
 GET http://localhost:5073/api/rooms
 
@@ -54,3 +55,6 @@ Content-Type: application/json
     "username": "admin",
     "password": "123"
 }
+
+###
+POST  http://localhost:5073/api/logout/1

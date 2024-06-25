@@ -11,24 +11,45 @@ public static class MeetingEndpoints
     {
         var group = app.MapGroup("api/meetings");
 
-        group.MapGet("/", (AppDbContext dbContext) =>
+        group.MapGet("/", (
+            int pageIndex,
+            int numberInPage,
+            AppDbContext dbContext,
+            DateTime? startTime = null,
+            DateTime? endTime = null) =>
         {
-            return Results.Ok(dbContext.Meetings);
-        });
+            startTime ??= DateTime.MinValue;
+            endTime ??= DateTime.MaxValue;
+
+            var total = dbContext.Meetings.Count();
+            var meetings = dbContext.Meetings.OrderByDescending(m => m.Id)
+                .Skip((pageIndex - 1) * numberInPage)
+                .Take(numberInPage)
+                .ToList();
+
+            MeetingPagi meetingPagi = new()
+            {
+                Meetings = meetings,
+                Total = total
+            };
+
+            return Results.Ok(meetingPagi);
+        }).RequireAuthorization();
 
         group.MapGet("/{id}", (int id, AppDbContext dbContext) =>
         {
             Meeting? meeting = dbContext.Meetings.Find(id);
 
             return meeting is null ? Results.NotFound() : Results.Ok(meeting);
-        });
+        }).RequireAuthorization();
 
         group.MapPost("/", async (CreateMeetingDtos newMeeting, AppDbContext dbContext) =>
         {
             Meeting meeting = new()
             {
                 Title = newMeeting.Title,
-                Date = newMeeting.Date
+                Date = newMeeting.Date,
+                IsActive = true
             };
 
             dbContext.Meetings.Add(meeting);
@@ -45,7 +66,7 @@ public static class MeetingEndpoints
                     UserId = user.Id,
                     MeetingId = meeting.Id,
                     RoomId = 1,
-                    IsMeeting = true
+                    Status = "Chưa đăng ký"
                 };
 
                 dbContext.Attendees.Add(attendee);
@@ -55,32 +76,57 @@ public static class MeetingEndpoints
             return Results.NoContent();
         });
 
-        group.MapDelete("/{id}", async (int id, AppDbContext dbContext) =>
-        {
+        group.MapPut("/{id}", async (int id, AppDbContext dbContext) => {
             var meeting = dbContext.Meetings.Find(id);
             if (meeting == null)
             {
                 return Results.NotFound();
             }
 
-            dbContext.Meetings.Remove(meeting);
+            meeting.IsActive = !meeting.IsActive;
 
-            var attendees = await dbContext.Attendees.ToListAsync();
-
-            foreach (var attendee in attendees)
-            {
-                if (attendee.MeetingId == id)
-                {
-                    dbContext.Attendees.Remove(attendee);
-                }
-            }
-
+            dbContext.Entry(meeting).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
 
             return Results.NoContent();
-        });
+        }).RequireAuthorization();
 
-        group.MapGet("/{id}/attendees", async (int id, AppDbContext dbContext) =>
+        // group.MapDelete("/{id}", async (int id, AppDbContext dbContext) =>
+        // {
+        //     var meeting = dbContext.Meetings.Find(id);
+        //     if (meeting == null)
+        //     {
+        //         return Results.NotFound();
+        //     }
+
+        //     dbContext.Meetings.Remove(meeting);
+
+        //     var attendees = await dbContext.Attendees.ToListAsync();
+
+        //     foreach (var attendee in attendees)
+        //     {
+        //         if (attendee.MeetingId == id)
+        //         {
+        //             dbContext.Attendees.Remove(attendee);
+        //         }
+        //     }
+
+        //     await dbContext.SaveChangesAsync();
+
+        //     return Results.NoContent();
+        // });
+
+        group.MapGet("/{id}/attendees", async (
+            int id,
+            int pageIndex,
+            int numberInPage,
+            AppDbContext dbContext,
+            string? search = "",
+            string? position = "",
+            int? departmentId = 0,
+            int? roomId = 0,
+            int? isMeeting = 2,
+            string? reason = null) =>
         {
             var meeting = dbContext.Meetings.Find(id);
 
@@ -101,14 +147,30 @@ public static class MeetingEndpoints
                     DepartmentId: userEntity.DepartmentId,
                     Position: userEntity.Position,
                     RoomId: item.RoomId,
-                    IsMeeting: item.IsMeeting
+                    Status: item.Status!,
+                    Reason: item.Reason
                 );
 
-                users.Add(userDto);
+                // if (userDto.Fullname.Contains(search)
+                //     && (departmentId == 0 || userDto.DepartmentId == departmentId)
+                //     && (roomId == 0 || userDto.RoomId == roomId)
+                //     // && (isMeeting == 2 || (userDto.IsMeeting == true && isMeeting == 1) || (userDto.IsMeeting == false && isMeeting == 0))
+                //     && (position?.Length <= 0 || userDto.Position == position)
+                //     && (reason == null || reason.Contains(userDto.Reason!))
+                // )
+                // {
+                    users.Add(userDto);
+                //}
             }
 
-            return Results.Ok(users);
-        });
+            AttendeePaging attendeePaging = new()
+            {
+                Attendees = users.OrderBy(u => u.Id).Skip((pageIndex - 1) * numberInPage).Take(numberInPage).ToList(),
+                Total = users.Count()
+            };
+
+            return Results.Ok(attendeePaging);
+        }).RequireAuthorization();
 
         return group;
     }

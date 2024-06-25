@@ -5,6 +5,6 @@ public record class AttenMeetingDto(
     string Title,
     int RoomId,
     string Reason,
-    bool IsMeeting,
-    DateOnly Date
+    string Status,
+    DateTime Date
 );
