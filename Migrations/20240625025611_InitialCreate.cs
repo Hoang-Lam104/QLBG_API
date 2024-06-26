@@ -33,7 +33,8 @@ namespace QLGB.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -47,7 +48,8 @@ namespace QLGB.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +66,8 @@ namespace QLGB.API.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fullname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,11 +88,11 @@ namespace QLGB.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     MeetingId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    RoomId = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RegisterTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MeetingTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    RegisterTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MeetingTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,8 +107,7 @@ namespace QLGB.API.Migrations
                         name: "FK_Attendees_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Attendees_Users_UserId",
                         column: x => x.UserId,
@@ -141,33 +143,33 @@ namespace QLGB.API.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Khoa Bệnh nhiệt đới" },
+                    { 1, "Ban lãnh đạo" },
                     { 2, "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu" },
                     { 3, "Khoa y học cổ truyền - Phục hồi chức năng" },
                     { 4, "Khoa ngoại" },
                     { 5, "Khoa mắt" },
-                    { 6, "Ban lãnh đạo" }
+                    { 6, "Khoa Bệnh nhiệt đới" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Rooms",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "IsActive", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Hội trường 1 CS1" },
-                    { 2, "Hội trường 2 CS1" },
-                    { 3, "Hội trường 3 CS1" },
-                    { 4, "Hội trường CS2" }
+                    { 1, true, "Hội trường 1 CS1" },
+                    { 2, true, "Hội trường 2 CS1" },
+                    { 3, true, "Hội trường 3 CS1" },
+                    { 4, true, "Hội trường CS2" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "DepartmentId", "Fullname", "Password", "Position", "Username" },
+                columns: new[] { "Id", "DepartmentId", "Fullname", "IsActive", "Password", "Position", "Username" },
                 values: new object[,]
                 {
-                    { 1, 6, "Admin", "123", "Admin", "admin" },
-                    { 2, 1, "Nguyễn Văn A", "123", "Trưởng khoa", "ANV" },
-                    { 3, 2, "Lê Thị B", "123", "Điều dưỡng trưởng", "BLT" }
+                    { 1, 1, "Admin", true, "123", "Admin", "admin" },
+                    { 2, 2, "Nguyễn Văn A", true, "123", "Trưởng khoa", "ANV" },
+                    { 3, 3, "Lê Thị B", true, "123", "Điều dưỡng trưởng", "BLT" }
                 });
 
             migrationBuilder.CreateIndex(

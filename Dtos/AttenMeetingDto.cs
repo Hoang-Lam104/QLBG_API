@@ -3,8 +3,10 @@
 public record class AttenMeetingDto(
     int Id,
     string Title,
-    int RoomId,
+    int? RoomId,
     string Reason,
     string Status,
-    DateTime Date
+    bool IsActive,
+    DateTime StartTime,
+    DateTime EndTime
 );

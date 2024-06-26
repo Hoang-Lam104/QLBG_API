@@ -24,7 +24,7 @@ public static class LoginEndpoints
             var users = await dbContext.Users.ToListAsync();
             var user = users.Find(item => item.Username == loginDto.Username);
 
-            if (user != null && user.Password == loginDto.Password)
+            if (user != null && user.Password == loginDto.Password && user.IsActive)
             {
                 var token = string.Empty;
 
@@ -38,7 +38,7 @@ public static class LoginEndpoints
                 var tokenDes = new SecurityTokenDescriptor
                 {
                     Subject = new System.Security.Claims.ClaimsIdentity(new[] {
-                        new Claim("Id", loginDto.Username)
+                        new Claim("Id", user.Id.ToString()),
                     }),
                     Expires = DateTime.Now.AddHours(6),
                     Audience = audience,
@@ -54,6 +54,7 @@ public static class LoginEndpoints
 
                 UserLogin userLogin = new()
                 {
+                    UserId = user.Id,
                     Username = loginDto.Username,
                     Password = loginDto.Password,
                     AccessToken = token

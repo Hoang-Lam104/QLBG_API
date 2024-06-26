@@ -1,22 +1,24 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIiLCJuYmYiOjE3MTkyODc0OTMsImV4cCI6MTcxOTMwOTA5MywiaWF0IjoxNzE5Mjg3NDkzLCJpc3MiOiJxdWFubHlnaWFvYmFuLmNvbSIsImF1ZCI6InF1YW5seWdpYW9iYW4uY29tIn0.fthJiQMly8pmqFLRHnzf0eLAti64n4kSZxPfv07u4Mc
 ###
 POST  http://localhost:5073/api/meetings
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "title": "Họp giao ban",
-    "date": "2024-08-29"
+    "startTime": "2024-06-28T15:07:58.784",
+    "endTime": "2024-06-25T16:07:58.784"
 }
 
 ###
 GET http://localhost:5073/api/meetings?pageIndex=1&numberInPage=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFkbWluIiwibmJmIjoxNzE5MjA5MTI5LCJleHAiOjE3MTkyMzA3MjksImlhdCI6MTcxOTIwOTEyOSwiaXNzIjoicXVhbmx5Z2lhb2Jhbi5jb20iLCJhdWQiOiJxdWFubHlnaWFvYmFuLmNvbSJ9.07XhrdZ2gV12klKaDEc3ARSohexl3yj3gYSzmn_-icQ
-
+Authorization: Bearer {{token}}
 ###
-DELETE http://localhost:5073/api/meetings/9
-
+PUT http://localhost:5073/api/meetings/active/2
+Authorization: Bearer {{token}}
 ###
-GET http://localhost:5073/api/user/2/meetings?pageIndex=1&numberInPage=10&startTime=2024-08-21
-
+GET http://localhost:5073/api/user/2/meetings?pageIndex=1&numberInPage=10&status=Ch%C6%B0a+%C4%91%C4%83ng+k%C3%BD
+Authorization: Bearer {{token}}
 ###
 GET http://localhost:5073/api/meetings/14/attendees?pageIndex=1&numberInPage=10
 ###
@@ -24,27 +26,29 @@ GET http://localhost:5073/api/departments
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFkbWluIiwibmJmIjoxNzE5MjA5MTI5LCJleHAiOjE3MTkyMzA3MjksImlhdCI6MTcxOTIwOTEyOSwiaXNzIjoicXVhbmx5Z2lhb2Jhbi5jb20iLCJhdWQiOiJxdWFubHlnaWFvYmFuLmNvbSJ9.07XhrdZ2gV12klKaDEc3ARSohexl3yj3gYSzmn_-icQ
 ###
 GET http://localhost:5073/api/rooms
-
+Authorization: Bearer {{token}}
 ###
 PUT  http://localhost:5073/api/user/attend
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "userId": 3,
-    "meetingId": 3,
+    "userId": 2,
+    "meetingId": 1,
     "roomId": 1,
-    "isMeeting": false,
-    "reason": "Khám bệnh ở phòng khám"
+    "status": "Tham gia",
+    "registerTime":"2024-06-25T11:15:42.227Z"
 }
 
 ###
-PUT  http://localhost:5073/api/user/2/info
+PUT  http://localhost:5073/api/user/1/info
+Authorization: {{token}}
 Content-Type: application/json
 
 {
-    "fullname": "Nguyễn Trung A",
-    "departmentId": 2,
-    "position": "Trưởng khoa"
+    "fullname": "Admin",
+    "departmentId": 1,
+    "position": "admin"
 }
 
 ###

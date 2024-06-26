@@ -3,7 +3,9 @@
 public record class UpdateAttendeeDto(
     int UserId,
     int MeetingId,
-    int RoomId,
     string Status,
-    string Reason
+    int? RoomId,
+    string? Reason,
+    DateTime? RegisterTime,
+    DateTime? MeetingTime
 );

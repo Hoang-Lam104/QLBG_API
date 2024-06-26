@@ -35,19 +35,39 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasForeignKey(a => a.RoomId);
 
         modelBuilder.Entity<Room>().HasData(
-            new { Id = 1, Name = "Hội trường 1 CS1" },
-            new { Id = 2, Name = "Hội trường 2 CS1" },
-            new { Id = 3, Name = "Hội trường 3 CS1" },
-            new { Id = 4, Name = "Hội trường CS2" }
+            new
+            {
+                Id = 1,
+                Name = "Hội trường 1 CS1",
+                IsActive = true,
+            },
+            new
+            {
+                Id = 2,
+                Name = "Hội trường 2 CS1",
+                IsActive = true,
+            },
+            new
+            {
+                Id = 3,
+                Name = "Hội trường 3 CS1",
+                IsActive = true,
+            },
+            new
+            {
+                Id = 4,
+                Name = "Hội trường CS2",
+                IsActive = true,
+            }
         );
 
         modelBuilder.Entity<Department>().HasData(
-            new { Id = 1, Name = "Khoa Bệnh nhiệt đới" },
+            new { Id = 1, Name = "Ban lãnh đạo" },
             new { Id = 2, Name = "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu" },
             new { Id = 3, Name = "Khoa y học cổ truyền - Phục hồi chức năng" },
             new { Id = 4, Name = "Khoa ngoại" },
             new { Id = 5, Name = "Khoa mắt" },
-            new { Id = 6, Name = "Ban lãnh đạo" }
+            new { Id = 6, Name = "Khoa Bệnh nhiệt đới" }
         );
 
         modelBuilder.Entity<User>().HasData(
@@ -57,8 +77,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 Username = "admin",
                 Password = "123",
                 Fullname = "Admin",
-                DepartmentId = 6,
-                Position = "Admin"
+                DepartmentId = 1,
+                Position = "Admin",
+                IsActive = true,
             },
             new
             {
@@ -66,8 +87,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 Username = "ANV",
                 Password = "123",
                 Fullname = "Nguyễn Văn A",
-                DepartmentId = 1,
+                DepartmentId = 2,
                 Position = "Trưởng khoa",
+                IsActive = true,
             },
             new
             {
@@ -75,8 +97,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 Username = "BLT",
                 Password = "123",
                 Fullname = "Lê Thị B",
-                DepartmentId = 2,
+                DepartmentId = 3,
                 Position = "Điều dưỡng trưởng",
+                IsActive = true,
             }
         );
     }

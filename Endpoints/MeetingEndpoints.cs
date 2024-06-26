@@ -22,7 +22,8 @@ public static class MeetingEndpoints
             endTime ??= DateTime.MaxValue;
 
             var total = dbContext.Meetings.Count();
-            var meetings = dbContext.Meetings.OrderByDescending(m => m.Id)
+            var meetings = dbContext.Meetings
+                .OrderByDescending(m => m.Id)
                 .Skip((pageIndex - 1) * numberInPage)
                 .Take(numberInPage)
                 .ToList();
@@ -40,7 +41,14 @@ public static class MeetingEndpoints
         {
             Meeting? meeting = dbContext.Meetings.Find(id);
 
-            return meeting is null ? Results.NotFound() : Results.Ok(meeting);
+            if (meeting is null || !meeting.IsActive)
+            {
+                return Results.NotFound();
+            }
+            else
+            {
+                return Results.Ok(meeting);
+            }
         }).RequireAuthorization();
 
         group.MapPost("/", async (CreateMeetingDtos newMeeting, AppDbContext dbContext) =>
@@ -48,14 +56,15 @@ public static class MeetingEndpoints
             Meeting meeting = new()
             {
                 Title = newMeeting.Title,
-                Date = newMeeting.Date,
+                StartTime = newMeeting.StartTime,
+                EndTime = newMeeting.EndTime,
                 IsActive = true
             };
 
             dbContext.Meetings.Add(meeting);
             await dbContext.SaveChangesAsync();
 
-            var users = await dbContext.Users.ToListAsync();
+            var users = await dbContext.Users.Where(u => u.IsActive).ToListAsync();
             var admin = users.Find(user => user.Id == 1);
             users.Remove(admin!);
 
@@ -65,7 +74,6 @@ public static class MeetingEndpoints
                 {
                     UserId = user.Id,
                     MeetingId = meeting.Id,
-                    RoomId = 1,
                     Status = "Chưa đăng ký"
                 };
 
@@ -76,7 +84,8 @@ public static class MeetingEndpoints
             return Results.NoContent();
         });
 
-        group.MapPut("/{id}", async (int id, AppDbContext dbContext) => {
+        group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
+        {
             var meeting = dbContext.Meetings.Find(id);
             if (meeting == null)
             {
@@ -159,7 +168,7 @@ public static class MeetingEndpoints
                 //     && (reason == null || reason.Contains(userDto.Reason!))
                 // )
                 // {
-                    users.Add(userDto);
+                users.Add(userDto);
                 //}
             }
 

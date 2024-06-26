@@ -23,6 +23,7 @@ public static class UserEndpoints
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
+            string? status = "",
             DateTime? startTime = null,
             DateTime? endTime = null) =>
         {
@@ -49,13 +50,18 @@ public static class UserEndpoints
                     RoomId: item.RoomId,
                     Reason: item.Reason!,
                     Status: item.Status!,
-                    Date: meetingEntity.Date
+                    StartTime: meetingEntity.StartTime,
+                    EndTime: meetingEntity.EndTime,
+                    IsActive: meetingEntity.IsActive
                 );
 
-                if (meetingDto.Date >= startTime && meetingDto.Date <= endTime)
+                // if (meetingDto.Date >= startTime && meetingDto.Date <= endTime)
+                // {
+                if ((status == "" || status == meetingDto.Status) && meetingDto.IsActive)
                 {
                     meetings.Add(meetingDto);
                 }
+                // }
             }
 
             AttenMeetingPagi attenMeetingPagi = new()
@@ -80,7 +86,9 @@ public static class UserEndpoints
 
             attendee.RoomId = updateAttendee.RoomId;
             attendee.Status = updateAttendee.Status;
-            attendee.Reason = updateAttendee.Reason.Length > 0 ? updateAttendee.Reason : null;
+            attendee.Reason = updateAttendee.Reason;
+            attendee.RegisterTime = updateAttendee.RegisterTime ?? attendee.RegisterTime;
+            attendee.MeetingTime = updateAttendee.MeetingTime ?? attendee.MeetingTime;
 
             dbContext.Entry(attendee).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
@@ -102,6 +110,20 @@ public static class UserEndpoints
             await dbContext.SaveChangesAsync();
 
             return Results.Ok(user);
+        }).RequireAuthorization();
+
+        group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
+        {
+            User? user = dbContext.Users.Find(id);
+
+            if (user is null) return Results.NotFound();
+
+            user.IsActive = !user.IsActive;
+
+            dbContext.Entry(user).State = EntityState.Modified;
+            await dbContext.SaveChangesAsync();
+
+            return Results.NoContent();
         }).RequireAuthorization();
 
         return group;

@@ -5,7 +5,7 @@ public record class AttendeeDto(
     string Fullname,
     int DepartmentId,
     string Position,
-    int RoomId,
+    int? RoomId,
     string Status,
     string? Reason
 );

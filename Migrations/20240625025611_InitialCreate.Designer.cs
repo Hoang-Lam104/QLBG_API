@@ -12,7 +12,7 @@ using QLGB.API.Data;
 namespace QLGB.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240624075109_InitialCreate")]
+    [Migration("20240625025611_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -36,16 +36,16 @@ namespace QLGB.API.Migrations
                     b.Property<int>("MeetingId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("MeetingTime")
+                    b.Property<DateTime?>("MeetingTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("RegisterTime")
+                    b.Property<DateTime?>("RegisterTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -85,7 +85,7 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Khoa Bệnh nhiệt đới"
+                            Name = "Ban lãnh đạo"
                         },
                         new
                         {
@@ -110,7 +110,7 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 6,
-                            Name = "Ban lãnh đạo"
+                            Name = "Khoa Bệnh nhiệt đới"
                         });
                 });
 
@@ -149,11 +149,14 @@ namespace QLGB.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -172,6 +175,9 @@ namespace QLGB.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -184,21 +190,25 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 1,
+                            IsActive = true,
                             Name = "Hội trường 1 CS1"
                         },
                         new
                         {
                             Id = 2,
+                            IsActive = true,
                             Name = "Hội trường 2 CS1"
                         },
                         new
                         {
                             Id = 3,
+                            IsActive = true,
                             Name = "Hội trường 3 CS1"
                         },
                         new
                         {
                             Id = 4,
+                            IsActive = true,
                             Name = "Hội trường CS2"
                         });
                 });
@@ -217,6 +227,9 @@ namespace QLGB.API.Migrations
                     b.Property<string>("Fullname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -240,8 +253,9 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 1,
-                            DepartmentId = 6,
+                            DepartmentId = 1,
                             Fullname = "Admin",
+                            IsActive = true,
                             Password = "123",
                             Position = "Admin",
                             Username = "admin"
@@ -249,8 +263,9 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 2,
-                            DepartmentId = 1,
+                            DepartmentId = 2,
                             Fullname = "Nguyễn Văn A",
+                            IsActive = true,
                             Password = "123",
                             Position = "Trưởng khoa",
                             Username = "ANV"
@@ -258,8 +273,9 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 3,
-                            DepartmentId = 2,
+                            DepartmentId = 3,
                             Fullname = "Lê Thị B",
+                            IsActive = true,
                             Password = "123",
                             Position = "Điều dưỡng trưởng",
                             Username = "BLT"
@@ -276,9 +292,7 @@ namespace QLGB.API.Migrations
 
                     b.HasOne("QLGB.API.Models.Room", "Room")
                         .WithMany("Attendees")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoomId");
 
                     b.HasOne("QLGB.API.Models.User", "User")
                         .WithMany("Attendees")
