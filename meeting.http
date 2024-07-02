@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIiLCJuYmYiOjE3MTkyODc0OTMsImV4cCI6MTcxOTMwOTA5MywiaWF0IjoxNzE5Mjg3NDkzLCJpc3MiOiJxdWFubHlnaWFvYmFuLmNvbSIsImF1ZCI6InF1YW5seWdpYW9iYW4uY29tIn0.fthJiQMly8pmqFLRHnzf0eLAti64n4kSZxPfv07u4Mc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJuYmYiOjE3MTk4MDE3ODAsImV4cCI6MTcxOTgyMzM4MCwiaWF0IjoxNzE5ODAxNzgwLCJpc3MiOiJxdWFubHlnaWFvYmFuLmNvbSIsImF1ZCI6InF1YW5seWdpYW9iYW4uY29tIn0.5JHdAPgngFsTZgXgzKRpsS6ykcYupnew1ZmOSMIKou8
 ###
 POST  http://localhost:5073/api/meetings
 Content-Type: application/json
@@ -7,7 +7,7 @@ Authorization: Bearer {{token}}
 {
     "title": "Họp giao ban",
     "startTime": "2024-06-28T15:07:58.784",
-    "endTime": "2024-06-25T16:07:58.784"
+    "endTime": "2024-06-28T16:07:58.784"
 }
 
 ###
@@ -17,7 +17,7 @@ Authorization: Bearer {{token}}
 PUT http://localhost:5073/api/meetings/active/2
 Authorization: Bearer {{token}}
 ###
-GET http://localhost:5073/api/user/2/meetings?pageIndex=1&numberInPage=10&status=Ch%C6%B0a+%C4%91%C4%83ng+k%C3%BD
+GET http://localhost:5073/api/user/4/meetings?pageIndex=1&numberInPage=10&status=Ch%C6%B0a+%C4%91%C4%83ng+k%C3%BD
 Authorization: Bearer {{token}}
 ###
 GET http://localhost:5073/api/meetings/14/attendees?pageIndex=1&numberInPage=10
@@ -35,9 +35,9 @@ Content-Type: application/json
 {
     "userId": 2,
     "meetingId": 1,
-    "roomId": 1,
-    "status": "Tham gia",
-    "registerTime":"2024-06-25T11:15:42.227Z"
+    "status": "Không tham gia",
+    "reasonId": 2,
+    "registerTime":"2024-06-28T11:15:42.227Z"
 }
 
 ###
@@ -62,3 +62,32 @@ Content-Type: application/json
 
 ###
 POST  http://localhost:5073/api/logout/1
+
+###
+GET   http://localhost:5073/api/user/list
+Authorization: Bearer {{token}}
+
+###
+POST  http://localhost:5073/api/user/new
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "username": "LAMHK",
+    "password": "123",
+    "fullname": "Hoàng Khắc Lâm",
+    "departmentId": 2,
+    "position": "Nhân viên"
+}
+
+###
+GET  http://localhost:5073/api/user/list
+Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:5073/api/user/active/4
+Authorization: Bearer {{token}}
+
+###
+GET  http://localhost:5073/api/reasons
+Authorization: Bearer {{token}}

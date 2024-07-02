@@ -41,6 +41,7 @@ app.UseAuthorization();
 app.MapUserEndpoint();
 app.MapMeetingEndpoint();
 app.MapRoomEndpoint();
+app.MapReasonEndpoint();
 app.MapDepartmentEndpoint();
 app.MapLoginEndpoint();
 app.MigrateDb();

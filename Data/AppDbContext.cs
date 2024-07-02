@@ -11,6 +11,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users { get; set; }
     public DbSet<Attendee> Attendees { get; set; }
     public DbSet<Department> Departments { get; set; }
+    public DbSet<Reason> Reasons { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(a => a.Room)
             .WithMany(r => r.Attendees)
             .HasForeignKey(a => a.RoomId);
+
+        modelBuilder.Entity<Attendee>()
+            .HasOne(a => a.Reason)
+            .WithMany(r => r.Attendees)
+            .HasForeignKey(a => a.ReasonId);
 
         modelBuilder.Entity<Room>().HasData(
             new
@@ -61,6 +67,33 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             }
         );
 
+        modelBuilder.Entity<Reason>().HasData(
+            new
+            {
+                ReasonId = 1,
+                Title = "Khác",
+                IsActive = true,
+            },
+            new
+            {
+                ReasonId = 2,
+                Title = "Nghỉ bù trực",
+                IsActive = true,
+            },
+            new
+            {
+                ReasonId = 3,
+                Title = "Khám bệnh tại phòng khám",
+                IsActive = true,
+            },
+            new
+            {
+                ReasonId = 4,
+                Title = "Ở lại khoa làm việc",
+                IsActive = true,
+            }
+        );
+
         modelBuilder.Entity<Department>().HasData(
             new { Id = 1, Name = "Ban lãnh đạo" },
             new { Id = 2, Name = "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu" },
@@ -75,7 +108,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             {
                 Id = 1,
                 Username = "admin",
-                Password = "123",
+                Password = "MTIz",
                 Fullname = "Admin",
                 DepartmentId = 1,
                 Position = "Admin",
@@ -85,7 +118,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             {
                 Id = 2,
                 Username = "ANV",
-                Password = "123",
+                Password = "MTIz",
                 Fullname = "Nguyễn Văn A",
                 DepartmentId = 2,
                 Position = "Trưởng khoa",
@@ -95,7 +128,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             {
                 Id = 3,
                 Username = "BLT",
-                Password = "123",
+                Password = "MTIz",
                 Fullname = "Lê Thị B",
                 DepartmentId = 3,
                 Position = "Điều dưỡng trưởng",

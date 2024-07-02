@@ -100,31 +100,6 @@ public static class MeetingEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
 
-        // group.MapDelete("/{id}", async (int id, AppDbContext dbContext) =>
-        // {
-        //     var meeting = dbContext.Meetings.Find(id);
-        //     if (meeting == null)
-        //     {
-        //         return Results.NotFound();
-        //     }
-
-        //     dbContext.Meetings.Remove(meeting);
-
-        //     var attendees = await dbContext.Attendees.ToListAsync();
-
-        //     foreach (var attendee in attendees)
-        //     {
-        //         if (attendee.MeetingId == id)
-        //         {
-        //             dbContext.Attendees.Remove(attendee);
-        //         }
-        //     }
-
-        //     await dbContext.SaveChangesAsync();
-
-        //     return Results.NoContent();
-        // });
-
         group.MapGet("/{id}/attendees", async (
             int id,
             int pageIndex,
@@ -157,7 +132,8 @@ public static class MeetingEndpoints
                     Position: userEntity.Position,
                     RoomId: item.RoomId,
                     Status: item.Status!,
-                    Reason: item.Reason
+                    ReasonId: item.ReasonId,
+                    AnotherReason: item.AnotherReason
                 );
 
                 // if (userDto.Fullname.Contains(search)

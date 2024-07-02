@@ -16,15 +16,16 @@ public static class LoginEndpoints
         var group = app.MapGroup("api/");
 
         group.MapPost("/login", async (
-            HttpRequest request, 
-            LoginDtos loginDto, 
-            AppDbContext dbContext, 
+            HttpRequest request,
+            LoginDtos loginDto,
+            AppDbContext dbContext,
             IConfiguration configuration) =>
         {
             var users = await dbContext.Users.ToListAsync();
             var user = users.Find(item => item.Username == loginDto.Username);
+            var password = Convert.ToBase64String(Encoding.UTF8.GetBytes(loginDto.Password));
 
-            if (user != null && user.Password == loginDto.Password && user.IsActive)
+            if (user != null && user.Password == password && user.IsActive)
             {
                 var token = string.Empty;
 
@@ -60,14 +61,16 @@ public static class LoginEndpoints
                     AccessToken = token
                 };
 
-                Log log = new(){
+                Log log = new()
+                {
                     UserId = user.Id,
                     DeviceInfo = request.Headers.UserAgent,
                     LogTime = DateTime.Now,
                     LogEvent = "Login",
                 };
 
-                if(log.DeviceInfo!.Contains("Mozilla")){
+                if (log.DeviceInfo!.Contains("Mozilla"))
+                {
                     dbContext.Log.Add(log);
                     await dbContext.SaveChangesAsync();
                 }
@@ -81,21 +84,23 @@ public static class LoginEndpoints
         });
 
         group.MapPost("/logout/{UserId}", async (
-            HttpRequest request, 
-            int UserId, 
+            HttpRequest request,
+            int UserId,
             AppDbContext dbContext) =>
         {
-                Log log = new(){
-                    UserId = UserId,
-                    DeviceInfo = request.Headers.UserAgent,
-                    LogTime = DateTime.Now,
-                    LogEvent = "Logout",
-                };
+            Log log = new()
+            {
+                UserId = UserId,
+                DeviceInfo = request.Headers.UserAgent,
+                LogTime = DateTime.Now,
+                LogEvent = "Logout",
+            };
 
-                if(log.DeviceInfo!.Contains("Mozilla")){
-                    dbContext.Log.Add(log);
-                    await dbContext.SaveChangesAsync();
-                }
+            if (log.DeviceInfo!.Contains("Mozilla"))
+            {
+                dbContext.Log.Add(log);
+                await dbContext.SaveChangesAsync();
+            }
 
             return Results.Ok(log);
         });

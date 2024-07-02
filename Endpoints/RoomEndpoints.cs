@@ -11,11 +11,18 @@ public static class RoomEndpoints
     {
         var group = app.MapGroup("api/rooms");
 
-        group.MapGet("/", (AppDbContext dbContext) => dbContext.Rooms.Where(r => r.IsActive))
+        group.MapGet("/", (AppDbContext dbContext) => dbContext.Rooms)
             .RequireAuthorization();
 
-        group.MapPost("/", (CreateRoomDtos newRoom, AppDbContext dbContext) =>
+        group.MapPost("/new", (CreateRoomDtos newRoom, AppDbContext dbContext) =>
         {
+            if (dbContext.Rooms.Any(r => r.Name == newRoom.Name))
+            {
+                return Results.Conflict(new
+                {
+                    message = "Hội trường đã tồn tại."
+                });
+            }
             Room room = new()
             {
                 Name = newRoom.Name,

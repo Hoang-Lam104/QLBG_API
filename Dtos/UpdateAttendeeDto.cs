@@ -5,7 +5,8 @@ public record class UpdateAttendeeDto(
     int MeetingId,
     string Status,
     int? RoomId,
-    string? Reason,
+    int? ReasonId,
+    string? AnotherReason,
     DateTime? RegisterTime,
     DateTime? MeetingTime
 );

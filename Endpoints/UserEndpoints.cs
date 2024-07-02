@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text;
+using Microsoft.EntityFrameworkCore;
 using QLGB.API.Data;
 using QLGB.API.Dtos;
 using QLGB.API.Models;
@@ -48,7 +49,8 @@ public static class UserEndpoints
                     Id: meetingEntity!.Id,
                     Title: meetingEntity.Title,
                     RoomId: item.RoomId,
-                    Reason: item.Reason!,
+                    ReasonId: item.ReasonId!,
+                    AnotherReason: item.AnotherReason!,
                     Status: item.Status!,
                     StartTime: meetingEntity.StartTime,
                     EndTime: meetingEntity.EndTime,
@@ -86,7 +88,8 @@ public static class UserEndpoints
 
             attendee.RoomId = updateAttendee.RoomId;
             attendee.Status = updateAttendee.Status;
-            attendee.Reason = updateAttendee.Reason;
+            attendee.ReasonId = updateAttendee.ReasonId;
+            attendee.AnotherReason = updateAttendee.ReasonId == 1 ? updateAttendee.AnotherReason : null;
             attendee.RegisterTime = updateAttendee.RegisterTime ?? attendee.RegisterTime;
             attendee.MeetingTime = updateAttendee.MeetingTime ?? attendee.MeetingTime;
 
@@ -116,7 +119,7 @@ public static class UserEndpoints
         {
             User? user = dbContext.Users.Find(id);
 
-            if (user is null) return Results.NotFound();
+            if (user is null || id == 1) return Results.NotFound();
 
             user.IsActive = !user.IsActive;
 
@@ -125,6 +128,96 @@ public static class UserEndpoints
 
             return Results.NoContent();
         }).RequireAuthorization();
+
+        group.MapGet("/list", (
+            int pageIndex,
+            int numberInPage,
+            AppDbContext dbContext
+        ) =>
+        {
+            return Results.Ok(new
+            {
+                users = dbContext.Users.OrderBy(u => u.Id).Skip((pageIndex - 1) * numberInPage).Take(numberInPage),
+                total = dbContext.Users.Count()
+            });
+        }
+        ).RequireAuthorization();
+
+        group.MapPost("/new", async (CreateUserDtos newUser, AppDbContext dbContext) =>
+        {
+            var userItem = dbContext.Users.Any(u => u.Username == newUser.Username);
+
+            if (userItem)
+            {
+                return Results.Conflict(new
+                {
+                    messager = "Tài khoản đã tồn tại."
+                });
+            }
+
+            var password = Convert.ToBase64String(Encoding.UTF8.GetBytes(newUser.Password));
+
+            User user = new()
+            {
+                Fullname = newUser.Fullname,
+                Username = newUser.Username,
+                Password = password,
+                DepartmentId = newUser.DepartmentId,
+                Position = newUser.Position,
+                IsActive = true
+            };
+
+            dbContext.Users.Add(user);
+            await dbContext.SaveChangesAsync();
+
+            var meetings = await dbContext.Meetings.ToListAsync();
+
+            foreach (var meeting in meetings)
+            {
+                var attendee = new Attendee
+                {
+                    UserId = user.Id,
+                    MeetingId = meeting.Id,
+                    Status = "Chưa đăng ký"
+                };
+
+                dbContext.Attendees.Add(attendee);
+            }
+
+            await dbContext.SaveChangesAsync();
+            return Results.Ok(new
+            {
+                message = "Tạo người dùng mới thành công."
+            });
+        });
+
+        group.MapPut("/changepassword", async (ChangePasswordDto userChange, AppDbContext dbContext) =>
+        {
+            User? user = dbContext.Users.Find(userChange.UserId);
+
+            if (user == null)
+            {
+                return Results.NotFound();
+            }
+
+            var oldPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(userChange.OldPassword));
+
+            if (oldPassword != user.Password)
+            {
+                return Results.Conflict(new
+                {
+                    message = "Mật khẩu cũ không chính xác"
+                });
+            }
+
+            var password = Convert.ToBase64String(Encoding.UTF8.GetBytes(userChange.NewPassword));
+            user.Password = password;
+
+            dbContext.Entry(user).State = EntityState.Modified;
+            await dbContext.SaveChangesAsync();
+
+            return Results.NoContent();
+        });
 
         return group;
     }

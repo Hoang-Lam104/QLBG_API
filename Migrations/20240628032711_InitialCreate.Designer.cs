@@ -12,7 +12,7 @@ using QLGB.API.Data;
 namespace QLGB.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240625025611_InitialCreate")]
+    [Migration("20240628032711_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,14 +33,17 @@ namespace QLGB.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AnotherReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MeetingId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("MeetingTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Reason")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("ReasonId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("RegisterTime")
                         .HasColumnType("datetime2");
@@ -57,6 +60,8 @@ namespace QLGB.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MeetingId");
+
+                    b.HasIndex("ReasonId");
 
                     b.HasIndex("RoomId");
 
@@ -165,6 +170,51 @@ namespace QLGB.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Meetings");
+                });
+
+            modelBuilder.Entity("QLGB.API.Models.Reason", b =>
+                {
+                    b.Property<int>("ReasonId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReasonId"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ReasonId");
+
+                    b.ToTable("Reasons");
+
+                    b.HasData(
+                        new
+                        {
+                            ReasonId = 1,
+                            IsActive = true,
+                            Title = "Khác"
+                        },
+                        new
+                        {
+                            ReasonId = 2,
+                            IsActive = true,
+                            Title = "Nghỉ bù trực"
+                        },
+                        new
+                        {
+                            ReasonId = 3,
+                            IsActive = true,
+                            Title = "Khám bệnh tại phòng khám"
+                        },
+                        new
+                        {
+                            ReasonId = 4,
+                            IsActive = true,
+                            Title = "Ở lại khoa làm việc"
+                        });
                 });
 
             modelBuilder.Entity("QLGB.API.Models.Room", b =>
@@ -290,6 +340,10 @@ namespace QLGB.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QLGB.API.Models.Reason", "Reason")
+                        .WithMany("Attendees")
+                        .HasForeignKey("ReasonId");
+
                     b.HasOne("QLGB.API.Models.Room", "Room")
                         .WithMany("Attendees")
                         .HasForeignKey("RoomId");
@@ -301,6 +355,8 @@ namespace QLGB.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Meeting");
+
+                    b.Navigation("Reason");
 
                     b.Navigation("Room");
 
@@ -330,6 +386,11 @@ namespace QLGB.API.Migrations
                 });
 
             modelBuilder.Entity("QLGB.API.Models.Meeting", b =>
+                {
+                    b.Navigation("Attendees");
+                });
+
+            modelBuilder.Entity("QLGB.API.Models.Reason", b =>
                 {
                     b.Navigation("Attendees");
                 });

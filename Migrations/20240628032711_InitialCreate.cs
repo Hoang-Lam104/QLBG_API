@@ -43,6 +43,20 @@ namespace QLGB.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reasons",
+                columns: table => new
+                {
+                    ReasonId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reasons", x => x.ReasonId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
                 {
@@ -90,7 +104,8 @@ namespace QLGB.API.Migrations
                     MeetingId = table.Column<int>(type: "int", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReasonId = table.Column<int>(type: "int", nullable: true),
+                    AnotherReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegisterTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     MeetingTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -103,6 +118,11 @@ namespace QLGB.API.Migrations
                         principalTable: "Meetings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Attendees_Reasons_ReasonId",
+                        column: x => x.ReasonId,
+                        principalTable: "Reasons",
+                        principalColumn: "ReasonId");
                     table.ForeignKey(
                         name: "FK_Attendees_Rooms_RoomId",
                         column: x => x.RoomId,
@@ -152,6 +172,17 @@ namespace QLGB.API.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Reasons",
+                columns: new[] { "ReasonId", "IsActive", "Title" },
+                values: new object[,]
+                {
+                    { 1, true, "Khác" },
+                    { 2, true, "Nghỉ bù trực" },
+                    { 3, true, "Khám bệnh tại phòng khám" },
+                    { 4, true, "Ở lại khoa làm việc" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Rooms",
                 columns: new[] { "Id", "IsActive", "Name" },
                 values: new object[,]
@@ -176,6 +207,11 @@ namespace QLGB.API.Migrations
                 name: "IX_Attendees_MeetingId",
                 table: "Attendees",
                 column: "MeetingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attendees_ReasonId",
+                table: "Attendees",
+                column: "ReasonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendees_RoomId",
@@ -209,6 +245,9 @@ namespace QLGB.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Meetings");
+
+            migrationBuilder.DropTable(
+                name: "Reasons");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

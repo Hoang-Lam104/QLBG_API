@@ -7,10 +7,12 @@ public class Attendee
     public int MeetingId { get; set; }
     public int? RoomId { get; set; }
     public string? Status { get; set; }
-    public string? Reason { get; set; } 
+    public int? ReasonId { get; set; } 
+    public string? AnotherReason { get; set; }
     public DateTime? RegisterTime { get; set; }
     public DateTime? MeetingTime { get; set; }
     public User? User { get; set; }
     public Meeting? Meeting { get; set; }
     public Room? Room { get; set; }
+    public Reason? Reason{ get; set; }
 }
