@@ -11,7 +11,10 @@ public static class ReasonEndpoints
     {
         var group = app.MapGroup("api/reasons");
 
-        group.MapGet("/", (AppDbContext dbContext) => dbContext.Reasons)
+        group.MapGet("/", (AppDbContext dbContext) => dbContext.Reasons.Where(r => r.IsActive))
+            .RequireAuthorization();
+
+        group.MapGet("/all", (AppDbContext dbContext) => dbContext.Reasons)
             .RequireAuthorization();
 
         group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
