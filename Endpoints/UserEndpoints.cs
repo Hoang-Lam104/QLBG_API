@@ -12,6 +12,7 @@ public static class UserEndpoints
     {
         var group = app.MapGroup("api/user");
 
+        // get user's infomations
         group.MapGet("/{id}/info", (int id, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(id);
@@ -19,12 +20,15 @@ public static class UserEndpoints
             return user is null ? Results.NotFound() : Results.Ok(user);
         }).RequireAuthorization();
 
+        // get list meeting of user by id
         group.MapGet("/{id}/meetings", async (
             int id,
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
             string? status = "",
+            int? reasonId = null,
+            int? roomId = null,
             DateTime? startTime = null,
             DateTime? endTime = null) =>
         {
@@ -57,13 +61,17 @@ public static class UserEndpoints
                     IsActive: meetingEntity.IsActive
                 );
 
-                // if (meetingDto.Date >= startTime && meetingDto.Date <= endTime)
-                // {
-                if ((status == "" || status == meetingDto.Status) && meetingDto.IsActive)
+                if (
+                    (status == "" || status == meetingDto.Status) &&
+                    (reasonId == null || reasonId == meetingDto.ReasonId) &&
+                    (roomId == null || roomId == meetingDto.RoomId) &&
+                    meetingDto.StartTime >= startTime &&
+                    meetingDto.EndTime <= endTime &&
+                    meetingDto.IsActive
+                )
                 {
                     meetings.Add(meetingDto);
                 }
-                // }
             }
 
             AttenMeetingPagi attenMeetingPagi = new()
@@ -78,6 +86,7 @@ public static class UserEndpoints
             return Results.Ok(attenMeetingPagi);
         });
 
+        // register meeting 
         group.MapPut("/attend", async (UpdateAttendeeDto updateAttendee, AppDbContext dbContext) =>
         {
             Attendee? attendee = await dbContext.Attendees.FirstOrDefaultAsync(a =>
@@ -99,6 +108,7 @@ public static class UserEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
 
+        // change user's infomation
         group.MapPut("/{id}/info", async (int id, UpdateUserDto updateUser, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(id);
@@ -115,6 +125,7 @@ public static class UserEndpoints
             return Results.Ok(user);
         }).RequireAuthorization();
 
+        // toggle active user (role: admin)
         group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(id);
@@ -129,6 +140,7 @@ public static class UserEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
 
+        // get list users (role: admin)
         group.MapGet("/list", (
             int pageIndex,
             int numberInPage,
@@ -143,6 +155,7 @@ public static class UserEndpoints
         }
         ).RequireAuthorization();
 
+        // create new user 
         group.MapPost("/new", async (CreateUserDtos newUser, AppDbContext dbContext) =>
         {
             var userItem = dbContext.Users.Any(u => u.Username == newUser.Username);
@@ -191,6 +204,7 @@ public static class UserEndpoints
             });
         });
 
+        // change password
         group.MapPut("/changepassword", async (ChangePasswordDto userChange, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(userChange.UserId);

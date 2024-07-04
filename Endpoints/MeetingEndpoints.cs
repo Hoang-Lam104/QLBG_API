@@ -11,6 +11,7 @@ public static class MeetingEndpoints
     {
         var group = app.MapGroup("api/meetings");
 
+        // get list meeting (role: admin)
         group.MapGet("/", (
             int pageIndex,
             int numberInPage,
@@ -23,6 +24,7 @@ public static class MeetingEndpoints
 
             var total = dbContext.Meetings.Count();
             var meetings = dbContext.Meetings
+                .Where(m => m.StartTime >= startTime && m.EndTime <= endTime)
                 .OrderByDescending(m => m.Id)
                 .Skip((pageIndex - 1) * numberInPage)
                 .Take(numberInPage)
@@ -37,6 +39,7 @@ public static class MeetingEndpoints
             return Results.Ok(meetingPagi);
         }).RequireAuthorization();
 
+        // get detail meeting
         group.MapGet("/{id}", (int id, AppDbContext dbContext) =>
         {
             Meeting? meeting = dbContext.Meetings.Find(id);
@@ -51,6 +54,7 @@ public static class MeetingEndpoints
             }
         }).RequireAuthorization();
 
+        // create new meeting
         group.MapPost("/", async (CreateMeetingDtos newMeeting, AppDbContext dbContext) =>
         {
             Meeting meeting = new()
@@ -84,6 +88,7 @@ public static class MeetingEndpoints
             return Results.NoContent();
         });
 
+        // toggle active meeting
         group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
         {
             var meeting = dbContext.Meetings.Find(id);
@@ -100,17 +105,18 @@ public static class MeetingEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
 
+        // get list attendees of meeting by id
         group.MapGet("/{id}/attendees", async (
             int id,
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
             string? search = "",
-            string? position = "",
+            string? position = null,
             int? departmentId = 0,
             int? roomId = 0,
-            int? isMeeting = 2,
-            string? reason = null) =>
+            string? status = "",
+            int? reasonId = null) =>
         {
             var meeting = dbContext.Meetings.Find(id);
 
@@ -136,16 +142,17 @@ public static class MeetingEndpoints
                     AnotherReason: item.AnotherReason
                 );
 
-                // if (userDto.Fullname.Contains(search)
-                //     && (departmentId == 0 || userDto.DepartmentId == departmentId)
-                //     && (roomId == 0 || userDto.RoomId == roomId)
-                //     // && (isMeeting == 2 || (userDto.IsMeeting == true && isMeeting == 1) || (userDto.IsMeeting == false && isMeeting == 0))
-                //     && (position?.Length <= 0 || userDto.Position == position)
-                //     && (reason == null || reason.Contains(userDto.Reason!))
-                // )
-                // {
-                users.Add(userDto);
-                //}
+                if (
+                    userDto.Fullname.ToLower().Contains(search)
+                    && (departmentId == 0 || userDto.DepartmentId == departmentId)
+                    && (roomId == 0 || userDto.RoomId == roomId)
+                    && (position == null || userDto.Position == position)
+                    && (reasonId == null || reasonId == userDto.ReasonId)
+                    && (status?.Length <= 0 || status == userDto.Status)
+                )
+                {
+                    users.Add(userDto);
+                }
             }
 
             AttendeePaging attendeePaging = new()

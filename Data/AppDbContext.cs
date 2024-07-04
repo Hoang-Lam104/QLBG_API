@@ -100,7 +100,23 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             new { Id = 3, Name = "Khoa y học cổ truyền - Phục hồi chức năng" },
             new { Id = 4, Name = "Khoa ngoại" },
             new { Id = 5, Name = "Khoa mắt" },
-            new { Id = 6, Name = "Khoa Bệnh nhiệt đới" }
+            new { Id = 6, Name = "Khoa Bệnh nhiệt đới" },
+            new { Id = 7, Name = "Khoa chẩn đoán hình ảnh" },
+            new { Id = 8, Name = "Khoa nhi" },
+            new { Id = 9, Name = "Khoa HSTC - Chống độc - Thận nhân tạo" },
+            new { Id = 10, Name = "Khoa Nội tổng hợp" },
+            new { Id = 11, Name = "Khoa Nội Tim Mạch" },
+            new { Id = 12, Name = "Khoa khám bệnh" },
+            new { Id = 13, Name = "Khoa Răng Hàm Mặt" },
+            new { Id = 14, Name = "Khoa Tai Mũi Họng" },
+            new { Id = 15, Name = "Khoa Phụ Sản" },
+            new { Id = 16, Name = "Phòng Công tác xã hội" },
+            new { Id = 17, Name = "Phòng Điều dưỡng" },
+            new { Id = 18, Name = "Phòng Kế hoạch tổng hợp" },
+            new { Id = 19, Name = "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến" },
+            new { Id = 20, Name = "Phòng Tài chính kế toán" },
+            new { Id = 21, Name = "Phòng Tổ chức hành chính" },
+            new { Id = 22, Name = "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin" }
         );
 
         modelBuilder.Entity<User>().HasData(
@@ -112,26 +128,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 Fullname = "Admin",
                 DepartmentId = 1,
                 Position = "Admin",
-                IsActive = true,
-            },
-            new
-            {
-                Id = 2,
-                Username = "ANV",
-                Password = "MTIz",
-                Fullname = "Nguyễn Văn A",
-                DepartmentId = 2,
-                Position = "Trưởng khoa",
-                IsActive = true,
-            },
-            new
-            {
-                Id = 3,
-                Username = "BLT",
-                Password = "MTIz",
-                Fullname = "Lê Thị B",
-                DepartmentId = 3,
-                Position = "Điều dưỡng trưởng",
                 IsActive = true,
             }
         );

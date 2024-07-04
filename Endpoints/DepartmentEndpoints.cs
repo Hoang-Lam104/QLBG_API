@@ -12,14 +12,6 @@ public static class DepartmentEndpoints
 
         group.MapGet("/", (AppDbContext dbContext) => dbContext.Departments).RequireAuthorization();
 
-        // group.MapPost("/", (CreateDepartmentDtos newDepartment, AppDbContext dbContext) =>
-        // {
-        //     Department department = new (){
-        //         Name = newDepartment.Name,
-        //     };
-        //     // dbContext.Departments.Add()
-        // }).RequireAuthorization();
-
         return group;
     }
 }

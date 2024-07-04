@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJuYmYiOjE3MTk4MDE3ODAsImV4cCI6MTcxOTgyMzM4MCwiaWF0IjoxNzE5ODAxNzgwLCJpc3MiOiJxdWFubHlnaWFvYmFuLmNvbSIsImF1ZCI6InF1YW5seWdpYW9iYW4uY29tIn0.5JHdAPgngFsTZgXgzKRpsS6ykcYupnew1ZmOSMIKou8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJuYmYiOjE3MTk5Njk1NDcsImV4cCI6MTcxOTk5MTE0NywiaWF0IjoxNzE5OTY5NTQ3LCJpc3MiOiJxdWFubHlnaWFvYmFuLmNvbSIsImF1ZCI6InF1YW5seWdpYW9iYW4uY29tIn0.qeYOT5TGIPQ3rp_Z3La1W9L_RpNT_jimsx9an8oi4KQ
 ###
 POST  http://localhost:5073/api/meetings
 Content-Type: application/json
@@ -23,7 +23,7 @@ Authorization: Bearer {{token}}
 GET http://localhost:5073/api/meetings/14/attendees?pageIndex=1&numberInPage=10
 ###
 GET http://localhost:5073/api/departments
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImFkbWluIiwibmJmIjoxNzE5MjA5MTI5LCJleHAiOjE3MTkyMzA3MjksImlhdCI6MTcxOTIwOTEyOSwiaXNzIjoicXVhbmx5Z2lhb2Jhbi5jb20iLCJhdWQiOiJxdWFubHlnaWFvYmFuLmNvbSJ9.07XhrdZ2gV12klKaDEc3ARSohexl3yj3gYSzmn_-icQ
+Authorization: Bearer {{token}}
 ###
 GET http://localhost:5073/api/rooms
 Authorization: Bearer {{token}}
