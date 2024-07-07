@@ -3,8 +3,10 @@
 using Microsoft.EntityFrameworkCore;
 using QLGB.API.Models;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext : DbContext
+// (DbContextOptions<AppDbContext> options) : base(options)
 {
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     public DbSet<Log> Log { get; set; }
     public DbSet<Meeting> Meetings { get; set; }
     public DbSet<Room> Rooms { get; set; }

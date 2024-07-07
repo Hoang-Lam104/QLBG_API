@@ -26,14 +26,17 @@ public static class UserEndpoints
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
-            string? status = "",
-            int? reasonId = null,
-            int? roomId = null,
-            DateTime? startTime = null,
-            DateTime? endTime = null) =>
+            string? status ,
+            int? reasonId,
+            int? roomId,
+            DateTime? startTime,
+            DateTime? endTime) =>
         {
             startTime ??= DateTime.MinValue;
             endTime ??= DateTime.MaxValue;
+            status ??= "";
+            reasonId ??= 0;
+            roomId ??= 0;
 
             User? user = dbContext.Users.Find(id);
 
@@ -63,8 +66,8 @@ public static class UserEndpoints
 
                 if (
                     (status == "" || status == meetingDto.Status) &&
-                    (reasonId == null || reasonId == meetingDto.ReasonId) &&
-                    (roomId == null || roomId == meetingDto.RoomId) &&
+                    (reasonId == 0 || reasonId == meetingDto.ReasonId) &&
+                    (roomId == 0 || roomId == meetingDto.RoomId) &&
                     meetingDto.StartTime >= startTime &&
                     meetingDto.EndTime <= endTime &&
                     meetingDto.IsActive

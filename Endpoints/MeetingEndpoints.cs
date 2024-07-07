@@ -16,8 +16,8 @@ public static class MeetingEndpoints
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
-            DateTime? startTime = null,
-            DateTime? endTime = null) =>
+            DateTime? startTime,
+            DateTime? endTime) =>
         {
             startTime ??= DateTime.MinValue;
             endTime ??= DateTime.MaxValue;
@@ -111,13 +111,20 @@ public static class MeetingEndpoints
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
-            string? search = "",
-            string? position = null,
-            int? departmentId = 0,
-            int? roomId = 0,
-            string? status = "",
-            int? reasonId = null) =>
+            string? search,
+            string? position,
+            int? departmentId,
+            int? roomId,
+            string? status,
+            int? reasonId) =>
         {
+            search ??= "";
+            position ??= "";
+            departmentId ??= 0;
+            roomId ??= 0;
+            status ??= null;
+            reasonId ??= 0;
+
             var meeting = dbContext.Meetings.Find(id);
 
             if (meeting == null) return Results.NotFound();
@@ -147,7 +154,7 @@ public static class MeetingEndpoints
                     && (departmentId == 0 || userDto.DepartmentId == departmentId)
                     && (roomId == 0 || userDto.RoomId == roomId)
                     && (position == null || userDto.Position == position)
-                    && (reasonId == null || reasonId == userDto.ReasonId)
+                    && (reasonId == 0 || reasonId == userDto.ReasonId)
                     && (status?.Length <= 0 || status == userDto.Status)
                 )
                 {

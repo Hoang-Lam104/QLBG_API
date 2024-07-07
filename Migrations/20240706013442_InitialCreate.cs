@@ -168,7 +168,23 @@ namespace QLGB.API.Migrations
                     { 3, "Khoa y học cổ truyền - Phục hồi chức năng" },
                     { 4, "Khoa ngoại" },
                     { 5, "Khoa mắt" },
-                    { 6, "Khoa Bệnh nhiệt đới" }
+                    { 6, "Khoa Bệnh nhiệt đới" },
+                    { 7, "Khoa chẩn đoán hình ảnh" },
+                    { 8, "Khoa nhi" },
+                    { 9, "Khoa HSTC - Chống độc - Thận nhân tạo" },
+                    { 10, "Khoa Nội tổng hợp" },
+                    { 11, "Khoa Nội Tim Mạch" },
+                    { 12, "Khoa khám bệnh" },
+                    { 13, "Khoa Răng Hàm Mặt" },
+                    { 14, "Khoa Tai Mũi Họng" },
+                    { 15, "Khoa Phụ Sản" },
+                    { 16, "Phòng Công tác xã hội" },
+                    { 17, "Phòng Điều dưỡng" },
+                    { 18, "Phòng Kế hoạch tổng hợp" },
+                    { 19, "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến" },
+                    { 20, "Phòng Tài chính kế toán" },
+                    { 21, "Phòng Tổ chức hành chính" },
+                    { 22, "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin" }
                 });
 
             migrationBuilder.InsertData(
@@ -196,12 +212,7 @@ namespace QLGB.API.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "DepartmentId", "Fullname", "IsActive", "Password", "Position", "Username" },
-                values: new object[,]
-                {
-                    { 1, 1, "Admin", true, "123", "Admin", "admin" },
-                    { 2, 2, "Nguyễn Văn A", true, "123", "Trưởng khoa", "ANV" },
-                    { 3, 3, "Lê Thị B", true, "123", "Điều dưỡng trưởng", "BLT" }
-                });
+                values: new object[] { 1, 1, "Admin", true, "MTIz", "Admin", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendees_MeetingId",

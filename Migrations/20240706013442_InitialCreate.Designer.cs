@@ -12,7 +12,7 @@ using QLGB.API.Data;
 namespace QLGB.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240628032711_InitialCreate")]
+    [Migration("20240706013442_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace QLGB.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "7.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -116,6 +116,86 @@ namespace QLGB.API.Migrations
                         {
                             Id = 6,
                             Name = "Khoa Bệnh nhiệt đới"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Khoa chẩn đoán hình ảnh"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Khoa nhi"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Khoa HSTC - Chống độc - Thận nhân tạo"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Khoa Nội tổng hợp"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Khoa Nội Tim Mạch"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Khoa khám bệnh"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Khoa Răng Hàm Mặt"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Khoa Tai Mũi Họng"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Khoa Phụ Sản"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Phòng Công tác xã hội"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Phòng Điều dưỡng"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Phòng Kế hoạch tổng hợp"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Phòng Tài chính kế toán"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Phòng Tổ chức hành chính"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin"
                         });
                 });
 
@@ -306,29 +386,9 @@ namespace QLGB.API.Migrations
                             DepartmentId = 1,
                             Fullname = "Admin",
                             IsActive = true,
-                            Password = "123",
+                            Password = "MTIz",
                             Position = "Admin",
                             Username = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DepartmentId = 2,
-                            Fullname = "Nguyễn Văn A",
-                            IsActive = true,
-                            Password = "123",
-                            Position = "Trưởng khoa",
-                            Username = "ANV"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DepartmentId = 3,
-                            Fullname = "Lê Thị B",
-                            IsActive = true,
-                            Password = "123",
-                            Position = "Điều dưỡng trưởng",
-                            Username = "BLT"
                         });
                 });
 
