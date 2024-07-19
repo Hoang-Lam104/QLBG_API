@@ -7,17 +7,15 @@ namespace QLGB.API.Endpoints;
 
 public static class ReasonEndpoints
 {
-    public static RouteGroupBuilder MapReasonEndpoint(this WebApplication app)
+    public static void MapReasonEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        var group = app.MapGroup("api/reasons");
-
-        group.MapGet("/", (AppDbContext dbContext) => dbContext.Reasons.Where(r => r.IsActive))
+        endpoints.MapGet("/api/reasons", (AppDbContext dbContext) => dbContext.Reasons.Where(r => r.IsActive))
             .RequireAuthorization();
 
-        group.MapGet("/all", (AppDbContext dbContext) => dbContext.Reasons)
+        endpoints.MapGet("api/reasons/all", (AppDbContext dbContext) => dbContext.Reasons)
             .RequireAuthorization();
 
-        group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
+        endpoints.MapPut("api/reasons/active/{id}", async (int id, AppDbContext dbContext) =>
         {
             Reason? reason = dbContext.Reasons.Find(id);
 
@@ -34,7 +32,7 @@ public static class ReasonEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
 
-        group.MapPost("/new", (CreateReasonDtos newReason, AppDbContext dbContext) =>
+        endpoints.MapPost("api/reasons/new", (CreateReasonDtos newReason, AppDbContext dbContext) =>
         {
             if (dbContext.Reasons.Any(r => r.Title == newReason.Title))
             {
@@ -55,7 +53,5 @@ public static class ReasonEndpoints
 
             return Results.NoContent();
         }).RequireAuthorization();
-
-        return group;
     }
 }

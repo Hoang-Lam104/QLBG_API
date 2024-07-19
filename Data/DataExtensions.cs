@@ -8,6 +8,6 @@ public static class DataExtensions
     {
         using var scope = app.Services.CreateScope();
         var DbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        DbContext.Database.Migrate();
+        // DbContext.Database.Migrate();
     }
 }

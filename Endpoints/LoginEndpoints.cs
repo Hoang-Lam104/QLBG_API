@@ -11,11 +11,9 @@ namespace QLGB.API.Endpoints;
 
 public static class LoginEndpoints
 {
-    public static RouteGroupBuilder MapLoginEndpoint(this WebApplication app)
+    public static void MapLoginEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        var group = app.MapGroup("api/");
-
-        group.MapPost("/login", async (
+        endpoints.MapPost("/api/login", async (
             HttpRequest request,
             LoginDtos loginDto,
             AppDbContext dbContext,
@@ -57,7 +55,6 @@ public static class LoginEndpoints
                 {
                     UserId = user.Id,
                     Username = loginDto.Username,
-                    Password = loginDto.Password,
                     AccessToken = token
                 };
 
@@ -83,7 +80,7 @@ public static class LoginEndpoints
             }
         });
 
-        group.MapPost("/logout/{UserId}", async (
+        endpoints.MapPost("api/logout/{UserId}", async (
             HttpRequest request,
             int UserId,
             AppDbContext dbContext) =>
@@ -104,7 +101,5 @@ public static class LoginEndpoints
 
             return Results.Ok(log);
         });
-
-        return group;
     }
 }

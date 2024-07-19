@@ -12,18 +12,17 @@ using QLGB.API.Data;
 namespace QLGB.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240706013442_InitialCreate")]
+    [Migration("20240712003316_InitialCreate")]
     partial class InitialCreate
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.20")
+                .HasAnnotation("ProductVersion", "6.0.31")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("QLGB.API.Models.Attendee", b =>
                 {
@@ -31,7 +30,7 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AnotherReason")
                         .HasColumnType("nvarchar(max)");
@@ -76,7 +75,10 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -90,111 +92,133 @@ namespace QLGB.API.Migrations
                         new
                         {
                             Id = 1,
+                            IsActive = true,
                             Name = "Ban lãnh đạo"
                         },
                         new
                         {
                             Id = 2,
+                            IsActive = true,
                             Name = "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu"
                         },
                         new
                         {
                             Id = 3,
+                            IsActive = true,
                             Name = "Khoa y học cổ truyền - Phục hồi chức năng"
                         },
                         new
                         {
                             Id = 4,
+                            IsActive = true,
                             Name = "Khoa ngoại"
                         },
                         new
                         {
                             Id = 5,
+                            IsActive = true,
                             Name = "Khoa mắt"
                         },
                         new
                         {
                             Id = 6,
+                            IsActive = true,
                             Name = "Khoa Bệnh nhiệt đới"
                         },
                         new
                         {
                             Id = 7,
+                            IsActive = true,
                             Name = "Khoa chẩn đoán hình ảnh"
                         },
                         new
                         {
                             Id = 8,
+                            IsActive = true,
                             Name = "Khoa nhi"
                         },
                         new
                         {
                             Id = 9,
+                            IsActive = true,
                             Name = "Khoa HSTC - Chống độc - Thận nhân tạo"
                         },
                         new
                         {
                             Id = 10,
+                            IsActive = true,
                             Name = "Khoa Nội tổng hợp"
                         },
                         new
                         {
                             Id = 11,
+                            IsActive = true,
                             Name = "Khoa Nội Tim Mạch"
                         },
                         new
                         {
                             Id = 12,
+                            IsActive = true,
                             Name = "Khoa khám bệnh"
                         },
                         new
                         {
                             Id = 13,
+                            IsActive = true,
                             Name = "Khoa Răng Hàm Mặt"
                         },
                         new
                         {
                             Id = 14,
+                            IsActive = true,
                             Name = "Khoa Tai Mũi Họng"
                         },
                         new
                         {
                             Id = 15,
+                            IsActive = true,
                             Name = "Khoa Phụ Sản"
                         },
                         new
                         {
                             Id = 16,
+                            IsActive = true,
                             Name = "Phòng Công tác xã hội"
                         },
                         new
                         {
                             Id = 17,
+                            IsActive = true,
                             Name = "Phòng Điều dưỡng"
                         },
                         new
                         {
                             Id = 18,
+                            IsActive = true,
                             Name = "Phòng Kế hoạch tổng hợp"
                         },
                         new
                         {
                             Id = 19,
+                            IsActive = true,
                             Name = "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến"
                         },
                         new
                         {
                             Id = 20,
+                            IsActive = true,
                             Name = "Phòng Tài chính kế toán"
                         },
                         new
                         {
                             Id = 21,
+                            IsActive = true,
                             Name = "Phòng Tổ chức hành chính"
                         },
                         new
                         {
                             Id = 22,
+                            IsActive = true,
                             Name = "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin"
                         });
                 });
@@ -205,7 +229,7 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("DeviceInfo")
                         .HasColumnType("nvarchar(max)");
@@ -232,7 +256,7 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -258,7 +282,7 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReasonId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReasonId"), 1L, 1);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -303,7 +327,7 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -349,7 +373,7 @@ namespace QLGB.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");

@@ -3,14 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace QLGB.API.Migrations
 {
-    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -19,7 +15,8 @@ namespace QLGB.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -160,31 +157,31 @@ namespace QLGB.API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Departments",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "IsActive", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Ban lãnh đạo" },
-                    { 2, "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu" },
-                    { 3, "Khoa y học cổ truyền - Phục hồi chức năng" },
-                    { 4, "Khoa ngoại" },
-                    { 5, "Khoa mắt" },
-                    { 6, "Khoa Bệnh nhiệt đới" },
-                    { 7, "Khoa chẩn đoán hình ảnh" },
-                    { 8, "Khoa nhi" },
-                    { 9, "Khoa HSTC - Chống độc - Thận nhân tạo" },
-                    { 10, "Khoa Nội tổng hợp" },
-                    { 11, "Khoa Nội Tim Mạch" },
-                    { 12, "Khoa khám bệnh" },
-                    { 13, "Khoa Răng Hàm Mặt" },
-                    { 14, "Khoa Tai Mũi Họng" },
-                    { 15, "Khoa Phụ Sản" },
-                    { 16, "Phòng Công tác xã hội" },
-                    { 17, "Phòng Điều dưỡng" },
-                    { 18, "Phòng Kế hoạch tổng hợp" },
-                    { 19, "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến" },
-                    { 20, "Phòng Tài chính kế toán" },
-                    { 21, "Phòng Tổ chức hành chính" },
-                    { 22, "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin" }
+                    { 1, true, "Ban lãnh đạo" },
+                    { 2, true, "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu" },
+                    { 3, true, "Khoa y học cổ truyền - Phục hồi chức năng" },
+                    { 4, true, "Khoa ngoại" },
+                    { 5, true, "Khoa mắt" },
+                    { 6, true, "Khoa Bệnh nhiệt đới" },
+                    { 7, true, "Khoa chẩn đoán hình ảnh" },
+                    { 8, true, "Khoa nhi" },
+                    { 9, true, "Khoa HSTC - Chống độc - Thận nhân tạo" },
+                    { 10, true, "Khoa Nội tổng hợp" },
+                    { 11, true, "Khoa Nội Tim Mạch" },
+                    { 12, true, "Khoa khám bệnh" },
+                    { 13, true, "Khoa Răng Hàm Mặt" },
+                    { 14, true, "Khoa Tai Mũi Họng" },
+                    { 15, true, "Khoa Phụ Sản" },
+                    { 16, true, "Phòng Công tác xã hội" },
+                    { 17, true, "Phòng Điều dưỡng" },
+                    { 18, true, "Phòng Kế hoạch tổng hợp" },
+                    { 19, true, "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến" },
+                    { 20, true, "Phòng Tài chính kế toán" },
+                    { 21, true, "Phòng Tổ chức hành chính" },
+                    { 22, true, "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin" }
                 });
 
             migrationBuilder.InsertData(
@@ -245,7 +242,6 @@ namespace QLGB.API.Migrations
                 column: "DepartmentId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

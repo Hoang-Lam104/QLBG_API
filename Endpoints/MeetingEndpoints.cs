@@ -7,12 +7,10 @@ namespace QLGB.API.Endpoints;
 
 public static class MeetingEndpoints
 {
-    public static RouteGroupBuilder MapMeetingEndpoint(this WebApplication app)
+    public static void MapMeetingEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        var group = app.MapGroup("api/meetings");
-
         // get list meeting (role: admin)
-        group.MapGet("/", (
+        endpoints.MapGet("/api/meetings", (
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
@@ -40,7 +38,7 @@ public static class MeetingEndpoints
         }).RequireAuthorization();
 
         // get detail meeting
-        group.MapGet("/{id}", (int id, AppDbContext dbContext) =>
+        endpoints.MapGet("api/meetings/{id}", (int id, AppDbContext dbContext) =>
         {
             Meeting? meeting = dbContext.Meetings.Find(id);
 
@@ -55,7 +53,7 @@ public static class MeetingEndpoints
         }).RequireAuthorization();
 
         // create new meeting
-        group.MapPost("/", async (CreateMeetingDtos newMeeting, AppDbContext dbContext) =>
+        endpoints.MapPost("api/meetings/", async (CreateMeetingDtos newMeeting, AppDbContext dbContext) =>
         {
             Meeting meeting = new()
             {
@@ -89,7 +87,7 @@ public static class MeetingEndpoints
         });
 
         // toggle active meeting
-        group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
+        endpoints.MapPut("api/meetings/active/{id}", async (int id, AppDbContext dbContext) =>
         {
             var meeting = dbContext.Meetings.Find(id);
             if (meeting == null)
@@ -106,7 +104,7 @@ public static class MeetingEndpoints
         }).RequireAuthorization();
 
         // get list attendees of meeting by id
-        group.MapGet("/{id}/attendees", async (
+        endpoints.MapGet("api/meetings/{id}/attendees", async (
             int id,
             int pageIndex,
             int numberInPage,
@@ -118,8 +116,8 @@ public static class MeetingEndpoints
             string? status,
             int? reasonId) =>
         {
-            search ??= "";
-            position ??= "";
+            search ??= null;
+            position ??= null;
             departmentId ??= 0;
             roomId ??= 0;
             status ??= null;
@@ -150,7 +148,7 @@ public static class MeetingEndpoints
                 );
 
                 if (
-                    userDto.Fullname.ToLower().Contains(search)
+                    (search == null || userDto.Fullname.ToLower().Contains(search))
                     && (departmentId == 0 || userDto.DepartmentId == departmentId)
                     && (roomId == 0 || userDto.RoomId == roomId)
                     && (position == null || userDto.Position == position)
@@ -170,7 +168,5 @@ public static class MeetingEndpoints
 
             return Results.Ok(attendeePaging);
         }).RequireAuthorization();
-
-        return group;
     }
 }

@@ -7,17 +7,15 @@ namespace QLGB.API.Endpoints;
 
 public static class RoomEndpoints
 {
-    public static RouteGroupBuilder MapRoomEndpoint(this WebApplication app)
+    public static void MapRoomEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        var group = app.MapGroup("api/rooms");
-
-        group.MapGet("/", (AppDbContext dbContext) => dbContext.Rooms.Where(r => r.IsActive))
+        endpoints.MapGet("/api/rooms", (AppDbContext dbContext) => dbContext.Rooms.Where(r => r.IsActive))
             .RequireAuthorization();
 
-        group.MapGet("/all", (AppDbContext dbContext) => dbContext.Rooms)
+        endpoints.MapGet("api/rooms/all", (AppDbContext dbContext) => dbContext.Rooms)
             .RequireAuthorization();
 
-        group.MapPost("/new", (CreateRoomDtos newRoom, AppDbContext dbContext) =>
+        endpoints.MapPost("api/rooms/new", (CreateRoomDtos newRoom, AppDbContext dbContext) =>
         {
             if (dbContext.Rooms.Any(r => r.Name == newRoom.Name))
             {
@@ -38,7 +36,7 @@ public static class RoomEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
 
-        group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
+        endpoints.MapPut("api/rooms/active/{id}", async (int id, AppDbContext dbContext) =>
         {
             Room? room = dbContext.Rooms.Find(id);
 
@@ -54,7 +52,5 @@ public static class RoomEndpoints
 
             return Results.NoContent();
         }).RequireAuthorization();
-
-        return group;
     }
 }

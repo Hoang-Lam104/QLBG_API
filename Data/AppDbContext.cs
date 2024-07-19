@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using QLGB.API.Models;
 
 public class AppDbContext : DbContext
-// (DbContextOptions<AppDbContext> options) : base(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     public DbSet<Log> Log { get; set; }
     public DbSet<Meeting> Meetings { get; set; }
     public DbSet<Room> Rooms { get; set; }
@@ -14,6 +12,17 @@ public class AppDbContext : DbContext
     public DbSet<Attendee> Attendees { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Reason> Reasons { get; set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+        Log = Set<Log>();
+        Meetings = Set<Meeting>();
+        Rooms = Set<Room>();
+        Users = Set<User>();
+        Attendees = Set<Attendee>();
+        Departments = Set<Department>();
+        Reasons = Set<Reason>();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -97,28 +106,28 @@ public class AppDbContext : DbContext
         );
 
         modelBuilder.Entity<Department>().HasData(
-            new { Id = 1, Name = "Ban lãnh đạo" },
-            new { Id = 2, Name = "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu" },
-            new { Id = 3, Name = "Khoa y học cổ truyền - Phục hồi chức năng" },
-            new { Id = 4, Name = "Khoa ngoại" },
-            new { Id = 5, Name = "Khoa mắt" },
-            new { Id = 6, Name = "Khoa Bệnh nhiệt đới" },
-            new { Id = 7, Name = "Khoa chẩn đoán hình ảnh" },
-            new { Id = 8, Name = "Khoa nhi" },
-            new { Id = 9, Name = "Khoa HSTC - Chống độc - Thận nhân tạo" },
-            new { Id = 10, Name = "Khoa Nội tổng hợp" },
-            new { Id = 11, Name = "Khoa Nội Tim Mạch" },
-            new { Id = 12, Name = "Khoa khám bệnh" },
-            new { Id = 13, Name = "Khoa Răng Hàm Mặt" },
-            new { Id = 14, Name = "Khoa Tai Mũi Họng" },
-            new { Id = 15, Name = "Khoa Phụ Sản" },
-            new { Id = 16, Name = "Phòng Công tác xã hội" },
-            new { Id = 17, Name = "Phòng Điều dưỡng" },
-            new { Id = 18, Name = "Phòng Kế hoạch tổng hợp" },
-            new { Id = 19, Name = "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến" },
-            new { Id = 20, Name = "Phòng Tài chính kế toán" },
-            new { Id = 21, Name = "Phòng Tổ chức hành chính" },
-            new { Id = 22, Name = "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin" }
+            new { Id = 1, Name = "Ban lãnh đạo", IsActive = true, },
+            new { Id = 2, Name = "Khoa phẫu thuật, gây mê - Hồi sức, cấp cứu", IsActive = true, },
+            new { Id = 3, Name = "Khoa y học cổ truyền - Phục hồi chức năng", IsActive = true, },
+            new { Id = 4, Name = "Khoa ngoại", IsActive = true, },
+            new { Id = 5, Name = "Khoa mắt", IsActive = true, },
+            new { Id = 6, Name = "Khoa Bệnh nhiệt đới", IsActive = true, },
+            new { Id = 7, Name = "Khoa chẩn đoán hình ảnh", IsActive = true, },
+            new { Id = 8, Name = "Khoa nhi", IsActive = true, },
+            new { Id = 9, Name = "Khoa HSTC - Chống độc - Thận nhân tạo", IsActive = true, },
+            new { Id = 10, Name = "Khoa Nội tổng hợp", IsActive = true, },
+            new { Id = 11, Name = "Khoa Nội Tim Mạch", IsActive = true, },
+            new { Id = 12, Name = "Khoa khám bệnh", IsActive = true, },
+            new { Id = 13, Name = "Khoa Răng Hàm Mặt", IsActive = true, },
+            new { Id = 14, Name = "Khoa Tai Mũi Họng", IsActive = true, },
+            new { Id = 15, Name = "Khoa Phụ Sản", IsActive = true, },
+            new { Id = 16, Name = "Phòng Công tác xã hội", IsActive = true, },
+            new { Id = 17, Name = "Phòng Điều dưỡng", IsActive = true, },
+            new { Id = 18, Name = "Phòng Kế hoạch tổng hợp", IsActive = true, },
+            new { Id = 19, Name = "Phòng Quản lý chất lượng - Đào tạo và Chỉ đạo tuyến", IsActive = true, },
+            new { Id = 20, Name = "Phòng Tài chính kế toán", IsActive = true, },
+            new { Id = 21, Name = "Phòng Tổ chức hành chính", IsActive = true, },
+            new { Id = 22, Name = "Phòng Vật tư kỹ thuật - Trang thiết bị và Công nghệ thông tin", IsActive = true, }
         );
 
         modelBuilder.Entity<User>().HasData(

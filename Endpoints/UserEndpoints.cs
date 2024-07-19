@@ -8,12 +8,10 @@ namespace QLGB.API.Endpoints;
 
 public static class UserEndpoints
 {
-    public static RouteGroupBuilder MapUserEndpoint(this WebApplication app)
+    public static void MapUserEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        var group = app.MapGroup("api/user");
-
         // get user's infomations
-        group.MapGet("/{id}/info", (int id, AppDbContext dbContext) =>
+        endpoints.MapGet("api/user/{id}/info", (int id, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(id);
 
@@ -21,12 +19,12 @@ public static class UserEndpoints
         }).RequireAuthorization();
 
         // get list meeting of user by id
-        group.MapGet("/{id}/meetings", async (
+        endpoints.MapGet("api/user/{id}/meetings", async (
             int id,
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext,
-            string? status ,
+            string? status,
             int? reasonId,
             int? roomId,
             DateTime? startTime,
@@ -90,7 +88,7 @@ public static class UserEndpoints
         });
 
         // register meeting 
-        group.MapPut("/attend", async (UpdateAttendeeDto updateAttendee, AppDbContext dbContext) =>
+        endpoints.MapPut("api/user/attend", async (UpdateAttendeeDto updateAttendee, AppDbContext dbContext) =>
         {
             Attendee? attendee = await dbContext.Attendees.FirstOrDefaultAsync(a =>
                 a.UserId == updateAttendee.UserId && a.MeetingId == updateAttendee.MeetingId
@@ -112,11 +110,11 @@ public static class UserEndpoints
         }).RequireAuthorization();
 
         // change user's infomation
-        group.MapPut("/{id}/info", async (int id, UpdateUserDto updateUser, AppDbContext dbContext) =>
+        endpoints.MapPut("api/user/{id}/info", async (int id, UpdateUserDto updateUser, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(id);
 
-            if (user is null) return Results.NotFound();
+            if (user is null || id == 1) return Results.NotFound();
 
             user.Fullname = updateUser.Fullname;
             user.DepartmentId = updateUser.DepartmentId;
@@ -129,7 +127,7 @@ public static class UserEndpoints
         }).RequireAuthorization();
 
         // toggle active user (role: admin)
-        group.MapPut("/active/{id}", async (int id, AppDbContext dbContext) =>
+        endpoints.MapPut("api/user/active/{id}", async (int id, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(id);
 
@@ -144,7 +142,7 @@ public static class UserEndpoints
         }).RequireAuthorization();
 
         // get list users (role: admin)
-        group.MapGet("/list", (
+        endpoints.MapGet("/api/user/list", (
             int pageIndex,
             int numberInPage,
             AppDbContext dbContext
@@ -159,7 +157,7 @@ public static class UserEndpoints
         ).RequireAuthorization();
 
         // create new user 
-        group.MapPost("/new", async (CreateUserDtos newUser, AppDbContext dbContext) =>
+        endpoints.MapPost("api/user/new", async (CreateUserDtos newUser, AppDbContext dbContext) =>
         {
             var userItem = dbContext.Users.Any(u => u.Username == newUser.Username);
 
@@ -208,7 +206,7 @@ public static class UserEndpoints
         });
 
         // change password
-        group.MapPut("/changepassword", async (ChangePasswordDto userChange, AppDbContext dbContext) =>
+        endpoints.MapPut("api/user/changepassword", async (ChangePasswordDto userChange, AppDbContext dbContext) =>
         {
             User? user = dbContext.Users.Find(userChange.UserId);
 
@@ -235,7 +233,5 @@ public static class UserEndpoints
 
             return Results.NoContent();
         });
-
-        return group;
     }
 }
