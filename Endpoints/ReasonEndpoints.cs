@@ -19,7 +19,7 @@ public static class ReasonEndpoints
         {
             Reason? reason = dbContext.Reasons.Find(id);
 
-            if (reason == null || reason.Title == "Khác")
+            if (reason == null || reason.Name == "Khác")
             {
                 return Results.NotFound();
             }
@@ -34,7 +34,7 @@ public static class ReasonEndpoints
 
         endpoints.MapPost("api/reasons/new", (CreateReasonDtos newReason, AppDbContext dbContext) =>
         {
-            if (dbContext.Reasons.Any(r => r.Title == newReason.Title))
+            if (dbContext.Reasons.Any(r => r.Name == newReason.Title))
             {
                 return Results.Conflict(new
                 {
@@ -44,7 +44,7 @@ public static class ReasonEndpoints
 
             Reason reason = new()
             {
-                Title = newReason.Title,
+                Name = newReason.Title,
                 IsActive = true
             };
 
